@@ -1,0 +1,32 @@
+{
+  "name": "firesword",
+  "version": "0.0.0",
+  "description": "Functional Approach Of Validating Firestore and RTDB data in Cloud Function Triggers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylim88/FireSword.git"
+  },
+  "keywords": [
+    "firebase",
+    "firestore",
+    "realtime",
+    "database",
+    "functional",
+    "validation",
+    "cloud",
+    "function",
+    "trigger",
+    "type",
+    "safety"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tylim88/FireSword/issues"
+  },
+  "homepage": "https://github.com/tylim88/FireSword#readme"
+}
