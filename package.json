@@ -1,32 +1,95 @@
 {
-  "name": "firesword",
-  "version": "0.0.0",
-  "description": "Functional Approach Of Validating Firestore and RTDB data in Cloud Function Triggers",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tylim88/FireSword.git"
-  },
-  "keywords": [
-    "firebase",
-    "firestore",
-    "realtime",
-    "database",
-    "functional",
-    "validation",
-    "cloud",
-    "function",
-    "trigger",
-    "type",
-    "safety"
-  ],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tylim88/FireSword/issues"
-  },
-  "homepage": "https://github.com/tylim88/FireSword#readme"
+	"name": "firesword",
+	"version": "1.4.5",
+	"description": "🔥Extreme Type Safe For Realtime Database Web, Write RTDB Code That Stand The Test Of Time",
+	"source": "src/index.ts",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"reinstall": "rm -rf node_modules && rm -rf package-lock.json && npm i && npx husky install",
+		"tsc": "tsc",
+		"lint": "eslint . --ext .ts --fix",
+		"pretty-quick": "pretty-quick --stage",
+		"test": "firebase emulators:exec --only database \"rm -rf coverage && jest\"",
+		"rollup": "rm -rf dist && rollup -c",
+		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
+		"link": "npm unlink firesword && npm link && npm link firesword",
+		"babel": "babel-node -x .ts -- src/fieldPath/documentId.ts",
+		"jest": "firebase emulators:exec --only database \"jest src/rulesUnitTesting.test.ts --collectCoverage=false\"",
+		"commit": "git commit --no-verify",
+		"dev": "---------------------dev------------------------",
+		"d-link": "npm run build && npm run link",
+		"d-test": "tsc && npm test",
+		"d-b-tsc": "npm run d-link && npm run b-uninstall && npm run b-tsc",
+		"d-b-test": "npm run d-b-tsc && npm run b-test",
+		"d-p-tsc": "npm run p-reinstall && npm run p-tsc",
+		"d-p-test": "npm run d-p-tsc && npm run p-test",
+		"d-pub": "npm run build && npm publish --tag beta",
+		"built": "-------------test built file-----------------------",
+		"b-tsc": "tsc -p tsconfig.doc.json",
+		"b-test": "firebase emulators:exec --only database \"jest -c=jest.config.doc.js\"",
+		"b-uninstall": "npm --prefix codeForDoc run uninstall",
+		"published": "-------------test published file-----------------------",
+		"p-reinstall": "npm --prefix codeForDoc run reinstall && babel-node -x .ts scripts/installLatest.ts",
+		"p-test": "npm --prefix codeForDoc test",
+		"p-tsc": "npm --prefix codeForDoc run tsc"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tylim88/firesword.git"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/tylim88/firesword/issues"
+	},
+	"homepage": "https://firelordjs.com/firesage/quick_start",
+	"keywords": [
+		"firebase",
+		"database",
+		"wrapper",
+		"typescript",
+		"web",
+		"scalable",
+		"type-safe",
+		"V9"
+	],
+	"devDependencies": {
+		"@babel/node": "^7.18.10",
+		"@babel/preset-env": "^7.18.10",
+		"@babel/preset-typescript": "^7.18.6",
+		"@rollup/plugin-typescript": "^8.5.0",
+		"@types/jest": "^28.1.6",
+		"@types/lodash": "^4.14.182",
+		"@types/shelljs": "^0.8.11",
+		"@types/uuid": "^8.3.4",
+		"@typescript-eslint/eslint-plugin": "^5.32.0",
+		"@typescript-eslint/parser": "^5.32.0",
+		"betwin": "^2.1.0",
+		"dotenv": "^16.0.1",
+		"eslint": "^8.21.0",
+		"eslint-cli": "^1.1.1",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-import-resolver-typescript": "^3.4.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"firebase-admin": "^11.0.1",
+		"firebase-functions": "^3.21.2",
+		"firebase-functions-test": "^2.0.2",
+		"husky": "^8.0.1",
+		"jest": "^28.1.3",
+		"lodash": "^4.17.21",
+		"pick-random": "^3.0.0",
+		"prettier": "^2.7.1",
+		"pretty-quick": "^3.1.3",
+		"rollup": "^2.79.0",
+		"rollup-plugin-terser": "^7.0.2",
+		"shelljs": "^0.8.5",
+		"tsdoc": "^0.0.4",
+		"typescript": "^4.8.2",
+		"uuid": "^8.3.2"
+	},
+	"peerDependencies": {
+		"firebase-admin": "^11.0.1",
+		"firebase-functions": "^3.21.2"
+	}
 }
