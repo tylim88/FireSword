@@ -13,5 +13,4 @@ module.exports = {
 	setupFiles: ['dotenv/config'],
 	maxWorkers: 1,
 	forceExit: true,
-	globalSetup: '<rootDir>/src/testSetup.ts',
 }

@@ -1,6 +1,6 @@
 import { ZodType, ZodFirstPartyTypeKind, z, ZodObject, ZodRawShape } from 'zod'
 
-export type DataType = ZodType & {
+export type Schema = ZodType & {
 	_def: { typeName: `${ZodFirstPartyTypeKind}` } & ZodType['_def']
 }
 
@@ -8,19 +8,24 @@ export type HandlerRef = {
 	upperLevelData: any
 	upperLevelClonedData: any
 	key: string
-	dataType: DataType
+	schema: Schema
 	matchCases: MatchCases
 }
 
 export type Handler = (ref: HandlerRef) => void
 
-export type ObjectHandler = (ref: HandlerRef) => void
+export type ObjectHandler = (
+	ref: HandlerRef,
+	specialValueCallback?: (ref: HandlerRef) => boolean
+) => void
 
-export type MatchCases = Record<ZodFirstPartyTypeKind, Handler | ObjectHandler>
+export type MatchCases = Partial<
+	Record<ZodFirstPartyTypeKind, Handler | ObjectHandler>
+>
 
 export type Filter = <T extends ZodObject<ZodRawShape>>(
 	ref: {
-		dataType: T
+		schema: T
 		data: Record<string, unknown>
 	},
 	...matchCasesArr: MatchCases[]

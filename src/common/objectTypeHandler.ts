@@ -1,26 +1,33 @@
-import { ObjectHandler, DataType } from './types'
+import { ObjectHandler, Schema } from './types'
 import { ZodObject, ZodRawShape } from 'zod'
 
-export const objectTypeHandler: ObjectHandler = ({
-	upperLevelData,
-	upperLevelClonedData,
-	key,
-	dataType,
-	matchCases,
-}) => {
+export const objectTypeHandler: ObjectHandler = (
+	{ upperLevelData, upperLevelClonedData, key, schema, matchCases },
+	specialValueCallback
+) => {
 	if (Object.prototype.hasOwnProperty.call(upperLevelData, key)) {
-		const dataType_ = dataType as ZodObject<ZodRawShape>
-		const shape = dataType_._def.shape()
-		const newUpperLevelClonedData = (upperLevelClonedData[key] = {})
+		if (
+			specialValueCallback?.({
+				upperLevelData,
+				upperLevelClonedData,
+				key,
+				schema,
+				matchCases,
+			})
+		)
+			return
 
+		const schema_ = schema as ZodObject<ZodRawShape>
+		const shape = schema_._def.shape()
+		const newUpperLevelClonedData = (upperLevelClonedData[key] = {})
 		for (const newKey in shape) {
 			if (Object.prototype.hasOwnProperty.call(upperLevelData[key], newKey)) {
-				const newDataType = shape[newKey] as DataType
-				matchCases[newDataType._def.typeName]({
+				const newSchema = shape[newKey] as Schema
+				matchCases[newSchema._def.typeName]!({
 					upperLevelData: upperLevelData[key],
 					upperLevelClonedData: newUpperLevelClonedData,
 					key: newKey,
-					dataType: newDataType,
+					schema: newSchema,
 					matchCases,
 				})
 			}

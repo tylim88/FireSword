@@ -102,7 +102,7 @@
 </div>
 <br/> -->
 
-Functional Approach Of Validating And Filtering Firestore and RTDB data in Cloud Function Trigger
+Filter Firestore and RTDB Unknown Keys.
 
 Successor of [FireLaw](https://github.com/tylim88/FireLaw)
 

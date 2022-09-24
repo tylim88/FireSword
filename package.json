@@ -1,7 +1,7 @@
 {
 	"name": "firesword",
-	"version": "1.4.5",
-	"description": "🔥Extreme Type Safe For Realtime Database Web, Write RTDB Code That Stand The Test Of Time",
+	"version": "0.0.0",
+	"description": "🔥Filter Firestore and RTDB Unknown Keys.",
 	"source": "src/index.ts",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
 		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
 		"link": "npm unlink firesword && npm link && npm link firesword",
 		"babel": "babel-node -x .ts -- src/index.ts",
-		"jest": "firebase emulators:exec --only database \"jest src/rulesUnitTesting.test.ts --collectCoverage=false\"",
+		"jest": "jest src/common/filter.test.ts --collectCoverage=false",
 		"commit": "git commit --no-verify",
 		"dev": "---------------------dev------------------------",
 		"d-link": "npm run build && npm run link",
