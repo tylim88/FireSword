@@ -3,22 +3,23 @@ import { ZodObject, ZodRawShape } from 'zod'
 
 export const objectTypeHandler: ObjectHandler = (
 	{ upperLevelData, upperLevelClonedData, key, schema, matchCases },
-	specialValueCallback
+	...exemptedObjectSchemas
 ) => {
+	const schema_ = schema as ZodObject<ZodRawShape>
+	const shape = schema_._def.shape()
 	if (Object.prototype.hasOwnProperty.call(upperLevelData, key)) {
 		if (
-			specialValueCallback?.({
-				upperLevelData,
-				upperLevelClonedData,
-				key,
-				schema,
-				matchCases,
+			exemptedObjectSchemas.some(sch => {
+				return (
+					JSON.stringify(Object.keys(shape)) ===
+					JSON.stringify(Object.keys(sch._def.shape()))
+				)
 			})
-		)
+		) {
+			upperLevelClonedData[key] = upperLevelData[key]
 			return
+		}
 
-		const schema_ = schema as ZodObject<ZodRawShape>
-		const shape = schema_._def.shape()
 		const newUpperLevelClonedData = (upperLevelClonedData[key] = {})
 		for (const newKey in shape) {
 			if (Object.prototype.hasOwnProperty.call(upperLevelData[key], newKey)) {

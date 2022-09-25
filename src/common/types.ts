@@ -16,7 +16,7 @@ export type Handler = (ref: HandlerRef) => void
 
 export type ObjectHandler = (
 	ref: HandlerRef,
-	specialValueCallback?: (ref: HandlerRef) => boolean
+	...exemptedObjectSchemas: ZodObject<ZodRawShape>[]
 ) => void
 
 export type MatchCases = Partial<
