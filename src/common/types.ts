@@ -7,7 +7,7 @@ export type Schema = ZodType & {
 export type HandlerRef = {
 	upperLevelData: any
 	upperLevelClonedData: any
-	key: string
+	key: string | number
 	schema: Schema
 	matchCases: MatchCases
 }

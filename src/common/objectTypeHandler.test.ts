@@ -1,6 +1,6 @@
 import { objectTypeHandler } from './objectTypeHandler'
 import { boolean, z } from 'zod'
-import { matchCases } from './wrapper'
+import { matchCases } from './utilsForTest'
 
 const schema = z.object({
 	a: z.string(),
@@ -23,7 +23,7 @@ describe('test objectTypeHandler', () => {
 		expect(newObj).toEqual(upperLevelData)
 	})
 
-	it('test data same member but value different', () => {
+	it('test data same member but wrong value type', () => {
 		const newObj = {}
 
 		const upperLevelData = { z: { a: 123, b: 'abc', c: { e: true } } }

@@ -4,4 +4,5 @@ import { z } from 'zod'
 
 export const a = z.union([z.object({ a: z.number() }), z.boolean()])
 export const b = z.object({ a: z.number() })
-console.log(b._def)
+export const c = z.array(z.string())
+console.log(c._def.type)
