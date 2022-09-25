@@ -1,5 +1,6 @@
-import { ObjectHandler, Schema } from './types'
+import { ObjectHandler, Schema, HandlerRef } from './types'
 import { ZodObject, ZodRawShape } from 'zod'
+import { wrapWithZodTypeName } from './wrapper'
 
 export const objectTypeHandler: ObjectHandler = (
 	{ upperLevelData, upperLevelClonedData, key, schema, matchCases },
@@ -35,3 +36,10 @@ export const objectTypeHandler: ObjectHandler = (
 		}
 	}
 }
+
+export const toWrapObjectTypeHandler = (
+	...exemptedObjectSchemas: ZodObject<ZodRawShape>[]
+) =>
+	wrapWithZodTypeName('ZodObject', (ref: HandlerRef) =>
+		objectTypeHandler(ref, ...exemptedObjectSchemas)
+	)

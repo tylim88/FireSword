@@ -1,5 +1,6 @@
 import { Handler, Schema } from './types'
 import { ZodUnion } from 'zod'
+import { wrapWithZodTypeName } from './wrapper'
 
 // does not work with object-any union or array-any union
 // test together with filter
@@ -24,3 +25,5 @@ export const unionTypeHandler: Handler = ({
 		})
 	}
 }
+
+export const wrappedUnion = wrapWithZodTypeName('ZodUnion', unionTypeHandler)

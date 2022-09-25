@@ -1,6 +1,6 @@
 import { objectTypeHandler } from './objectTypeHandler'
 import { boolean, z } from 'zod'
-import { matchCases } from './utilsForTest'
+import { allMatchCases as matchCases } from './utilsForTest'
 
 const schema = z.object({
 	a: z.string(),

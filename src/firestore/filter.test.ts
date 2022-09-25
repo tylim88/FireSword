@@ -1,6 +1,5 @@
 import { filter } from './filter'
 import { boolean, z } from 'zod'
-import { allMatchCases } from './utilsForTest'
 
 const schema = z.object({
 	z: z.object({
@@ -25,13 +24,10 @@ describe('test filter', () => {
 			},
 		}
 
-		const newObj = filter(
-			{
-				schema,
-				data,
-			},
-			allMatchCases
-		)
+		const newObj = filter({
+			schema,
+			data,
+		})
 
 		expect(newObj).toEqual(data)
 	})
@@ -46,13 +42,10 @@ describe('test filter', () => {
 			},
 		}
 
-		const newObj = filter(
-			{
-				schema,
-				data,
-			},
-			allMatchCases
-		)
+		const newObj = filter({
+			schema,
+			data,
+		})
 
 		expect(newObj).toEqual({
 			z: {
@@ -73,13 +66,10 @@ describe('test filter', () => {
 			},
 		}
 
-		const newObj = filter(
-			{
-				schema,
-				data,
-			},
-			allMatchCases
-		)
+		const newObj = filter({
+			schema,
+			data,
+		})
 
 		expect(newObj).toEqual({
 			z: { a: 123, c: { e: true, g: [{ i: 123 }] }, d: ['a', 'b', 'c'] },
@@ -98,13 +88,10 @@ describe('test filter', () => {
 			m: { n: boolean },
 		}
 
-		const newObj = filter(
-			{
-				schema,
-				data,
-			},
-			allMatchCases
-		)
+		const newObj = filter({
+			schema,
+			data,
+		})
 
 		expect(newObj).toEqual({
 			z: {

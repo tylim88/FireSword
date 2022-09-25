@@ -1,10 +1,11 @@
-import { Filter, Schema } from './types'
+import { Filter, Schema, MatchCases } from './types'
 import { ZodObject, ZodRawShape } from 'zod'
-import { combineMatchCaseArr } from './utils'
 
 export const filter: Filter = ({ schema, data }, ...matchCasesArr) => {
 	const newObj = {}
-	const matchCases = combineMatchCaseArr(...matchCasesArr)
+	const matchCases = matchCasesArr.reduce((acc, matchCases) => {
+		return { ...acc, ...matchCases }
+	}, {} as MatchCases)
 
 	const schema_ = schema as ZodObject<ZodRawShape>
 	const shape = schema_._def.shape()

@@ -1,8 +1,5 @@
 import { ZodFirstPartyTypeKind } from 'zod'
-import { Handler, MatchCases, ObjectHandler } from './types'
-import { primitiveTypeHandler } from './primitiveTypeHandler'
-import { unionTypeHandler } from './unionTypeHandler'
-import { arrayTypeHandler } from './arrayTypeHandler'
+import { Handler, ObjectHandler } from './types'
 
 export const wrapWithZodTypeName = <
 	T extends `${ZodFirstPartyTypeKind}`,
@@ -13,20 +10,3 @@ export const wrapWithZodTypeName = <
 ) => {
 	return { [zodTypename]: handler } as { [x in T]: Y }
 }
-
-const primitiveZodTypeName: `${ZodFirstPartyTypeKind}`[] = [
-	'ZodString',
-	'ZodBoolean',
-	'ZodNull',
-	'ZodNumber',
-	'ZodLiteral',
-]
-
-// generic
-export const wrappedGenericTypeHandler: MatchCases[] = [
-	...primitiveZodTypeName.map(name =>
-		wrapWithZodTypeName(name, primitiveTypeHandler)
-	),
-	wrapWithZodTypeName('ZodUnion', unionTypeHandler),
-	wrapWithZodTypeName('ZodArray', arrayTypeHandler),
-]

@@ -1,5 +1,6 @@
 import { Handler, Schema } from './types'
 import { ZodArray } from 'zod'
+import { wrapWithZodTypeName } from './wrapper'
 
 // test together with filter
 export const arrayTypeHandler: Handler = ({
@@ -27,3 +28,8 @@ export const arrayTypeHandler: Handler = ({
 		}
 	}
 }
+
+export const wrappedArrayTypeHandler = wrapWithZodTypeName(
+	'ZodArray',
+	arrayTypeHandler
+)
