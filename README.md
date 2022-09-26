@@ -106,7 +106,7 @@ import {
 	zGeoPoint,
 } from 'firesword/firestore'
 import { z } from 'zod'
-import { Timestamp, getFirestore } from 'firebase-admin/firestore' // also work with web sdk.
+import { Timestamp, getFirestore } from 'firebase-admin/firestore' // this is admin sdk but you can also use web sdk
 
 // {
 // 	a: string
@@ -267,7 +267,7 @@ import {
 	GeoPoint,
 	DocumentReference,
 	getFirestore,
-} from 'firebase/firestore' // also work with admin sdk.
+} from 'firebase/firestore' // this is admin sdk but you can also use web sdk
 
 // {
 // 	d: Timestamp
