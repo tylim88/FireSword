@@ -24,7 +24,7 @@ export const filteredData = filter({
 	},
 })
 
-console.log(filteredData)
+// console.log(filteredData)
 // {
 // 	a: true, // data does not change
 // 	b: {}, // data does not change

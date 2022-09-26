@@ -49,7 +49,7 @@ export const filteredData = filter({
 	},
 })
 
-console.log(filteredData)
+// console.log(filteredData)
 // {
 // 	b: 1,
 // 	c: {
