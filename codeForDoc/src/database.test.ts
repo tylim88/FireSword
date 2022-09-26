@@ -1,10 +1,10 @@
-import { filter } from 'firesword/database'
-import { boolean, z } from 'zod'
+import { filter, zTimestamp } from 'firesword/database'
+import { z } from 'zod'
 
 const schema = z.object({
 	z: z.object({
 		a: z.union([z.string(), z.number()]),
-		b: z.number(),
+		b: zTimestamp,
 		c: z.object({
 			e: z.null(),
 			f: z.union([z.literal('abc'), z.literal('efg')]),
@@ -78,7 +78,7 @@ describe('test filter', () => {
 				f: { g: { h: '123' } },
 				i: 999,
 			},
-			m: { n: boolean },
+			m: { n: true },
 		}
 
 		const newObj = filter({

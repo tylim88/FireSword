@@ -1,7 +1,7 @@
 {
 	"name": "firesword",
-	"version": "0.0.2",
-	"description": "🔥Filter Firestore and RTDB Unknown Keys.",
+	"version": "1.0.0",
+	"description": "🔥Filter Firestore and RTDB Unknown Keys, Support Nest Filtering.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {

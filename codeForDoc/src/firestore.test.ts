@@ -1,8 +1,8 @@
 import {
 	filter,
-	documentReference,
-	geoPoint,
-	timestamp,
+	zDocumentReference,
+	zGeoPoint,
+	zTimestamp,
 } from 'firesword/firestore'
 import { z } from 'zod'
 import { Timestamp, getFirestore, GeoPoint } from 'firebase-admin/firestore'
@@ -16,15 +16,15 @@ const gp = new GeoPoint(0, 0)
 
 const schema = z.object({
 	z: z.object({
-		a: z.union([z.string(), z.number(), geoPoint]),
+		a: z.union([z.string(), z.number(), zGeoPoint]),
 		b: z.number(),
 		c: z.object({
 			e: z.null(),
 			f: z.union([z.literal('abc'), z.literal('efg')]),
 			g: z.array(
-				z.object({ h: z.number(), i: z.string(), j: documentReference })
+				z.object({ h: z.number(), i: z.string(), j: zDocumentReference })
 			),
-			l: timestamp,
+			l: zTimestamp,
 		}),
 		d: z.array(z.union([z.boolean(), z.number()])),
 	}),
@@ -99,7 +99,7 @@ describe('test filter', () => {
 				f: { g: { h: '123' } },
 				i: 999,
 			},
-			m: { n: z.boolean() },
+			m: { n: true },
 		}
 
 		const newObj = filter({

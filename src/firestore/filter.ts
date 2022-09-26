@@ -5,13 +5,13 @@ import {
 	wrappedArrayTypeHandler,
 	toWrapObjectTypeHandler,
 } from '../common'
-import { documentReference, geoPoint, timestamp } from './specialTypes'
+import { zDocumentReference, zGeoPoint, zTimestamp } from './specialTypes'
 
 export const filter: Filter = ({ schema, data }) => {
 	return filter_(
 		{ schema, data },
 		genericMatchCases,
 		wrappedArrayTypeHandler,
-		toWrapObjectTypeHandler(documentReference, geoPoint, timestamp)
+		toWrapObjectTypeHandler(zDocumentReference, zGeoPoint, zTimestamp)
 	)
 }

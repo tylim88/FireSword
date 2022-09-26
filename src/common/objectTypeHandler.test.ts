@@ -80,7 +80,7 @@ describe('test objectTypeHandler', () => {
 			z: {
 				a: 123,
 
-				c: { e: true, j: null, f: 'h' },
+				c: { e: true, j: null, f: [] },
 				f: { g: { h: '123' } },
 				i: 999,
 			},
