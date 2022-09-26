@@ -267,7 +267,7 @@ import {
 	GeoPoint,
 	DocumentReference,
 	getFirestore,
-} from 'firebase/firestore' // this is admin sdk but you can also use web sdk
+} from 'firebase/firestore' // this is web sdk but you can also use admin sdk
 
 // {
 // 	d: Timestamp
