@@ -8,7 +8,8 @@ import {
 	getFirestore as getFirestore_,
 } from 'firebase/firestore'
 import { initializeApp as initializeApp_ } from 'firebase/app'
-describe('test zod parse special type', () => {
+
+describe('test zod parse special type for front end and back end', () => {
 	it('test timestamp', () => {
 		expect(timestamp.safeParse(new Timestamp(123, 456)).success).toBe(true)
 		expect(timestamp.safeParse(new Timestamp_(123, 456)).success).toBe(true)

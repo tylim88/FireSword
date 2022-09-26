@@ -1,8 +1,10 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 
-const sharedConfig = require('../jest.config.js')
+const sharedConfig = require('./jest.config.js')
 module.exports = {
 	...sharedConfig,
 	collectCoverage: false,
-	resolver: 'jest-node-exports-resolver',
+	transform: {
+		'^.+\\.(js|ts)$': './babel.config.ESM.js',
+	},
 }

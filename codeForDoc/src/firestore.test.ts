@@ -1,6 +1,10 @@
-import { filter } from './filter'
-import { boolean, z } from 'zod'
-import { documentReference, geoPoint, timestamp } from './specialTypes'
+import {
+	filter,
+	documentReference,
+	geoPoint,
+	timestamp,
+} from 'firesword/firestore'
+import { z } from 'zod'
 import { Timestamp, getFirestore, GeoPoint } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
 
@@ -95,7 +99,7 @@ describe('test filter', () => {
 				f: { g: { h: '123' } },
 				i: 999,
 			},
-			m: { n: boolean },
+			m: { n: z.boolean() },
 		}
 
 		const newObj = filter({

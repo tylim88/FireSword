@@ -13,6 +13,7 @@ const schema = z.object({
 		}),
 		d: z.array(z.union([z.boolean(), z.number()])),
 	}),
+	x: z.object({ y: z.literal('123') }),
 })
 describe('test filter', () => {
 	it('test data same as schema', () => {
@@ -23,6 +24,7 @@ describe('test filter', () => {
 				c: { e: null, f: 'efg', g: [{ h: 123, i: 'abc' }] },
 				d: [1, 2, 3],
 			},
+			x: { y: 123 },
 		}
 
 		const newObj = filter(
@@ -44,6 +46,7 @@ describe('test filter', () => {
 				c: { e: true, f: 123, g: null },
 				d: ['a', 'b', 'c'],
 			},
+			x: 123,
 		}
 
 		const newObj = filter(
@@ -61,6 +64,7 @@ describe('test filter', () => {
 				c: { e: true, f: 123, g: [] },
 				d: ['a', 'b', 'c'],
 			},
+			x: {},
 		})
 	})
 
@@ -95,6 +99,7 @@ describe('test filter', () => {
 				f: { g: { h: '123' } },
 				i: 999,
 			},
+			x: 123,
 			m: { n: boolean },
 		}
 
@@ -113,6 +118,7 @@ describe('test filter', () => {
 				c: { e: true, f: 123, g: [{ h: 'abc', i: 123 }] },
 				d: ['a', 'b', 'c'],
 			},
+			x: {},
 		})
 	})
 })

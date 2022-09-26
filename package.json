@@ -1,8 +1,7 @@
 {
 	"name": "firesword",
-	"version": "0.0.0",
+	"version": "0.0.2",
 	"description": "🔥Filter Firestore and RTDB Unknown Keys.",
-	"source": "src/index.ts",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
@@ -10,9 +9,9 @@
 		"tsc": "tsc",
 		"lint": "eslint . --ext .ts --fix",
 		"pretty-quick": "pretty-quick --stage",
-		"test": "firebase emulators:exec --only database \"rm -rf coverage && jest\"",
+		"test": "rm -rf coverage && jest",
 		"rollup": "rm -rf dist && rollup -c",
-		"build": "rm -rf dist && tsc -p tsconfig.prod.json",
+		"build": "rm -rf dist && tsc -p tsconfig.prod.json && tsc -p tsconfig.prodESM.json",
 		"link": "npm unlink firesword && npm link && npm link firesword",
 		"babel": "babel-node -x .ts -- src/index.ts",
 		"jest": "jest src/firestore/filter.test.ts --collectCoverage=false",
@@ -27,7 +26,7 @@
 		"d-pub": "npm run build && npm publish --tag beta",
 		"built": "-------------test built file-----------------------",
 		"b-tsc": "tsc -p tsconfig.doc.json",
-		"b-test": "firebase emulators:exec --only database \"jest -c=jest.config.doc.js\"",
+		"b-test": "jest -c=jest.config.doc.js && jest -c=jest.config.docESM.js",
 		"b-uninstall": "npm --prefix codeForDoc run uninstall",
 		"published": "-------------test published file-----------------------",
 		"p-reinstall": "npm --prefix codeForDoc run reinstall && babel-node -x .ts scripts/installLatest.ts",
@@ -89,6 +88,30 @@
 		"zod": "^3.19.1"
 	},
 	"peerDependencies": {
+		"lodash": "^4.17.21",
 		"zod": "^3.19.1"
+	},
+	"exports": {
+		".": null,
+		"./firestore": {
+			"types": "./dist/firestore/index.d.ts",
+			"require": "./dist/firestore/index.js",
+			"import": "./dist/esm/firestore/index.js"
+		},
+		"./database": {
+			"types": "./dist/database/index.d.ts",
+			"require": "./dist/database/index.js",
+			"import": "./dist/esm/database/index.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"firestore": [
+				"dist/firestore"
+			],
+			"database": [
+				"dist/database"
+			]
+		}
 	}
 }

@@ -15,6 +15,7 @@ module.exports = {
 	ignorePatterns: [
 		'codeForDoc/**/*',
 		'dist/**/*', // Ignore built files.
+		'babel.configESM.js',
 	],
 	plugins: ['@typescript-eslint', 'import'],
 	rules: {

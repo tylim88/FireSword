@@ -7,10 +7,7 @@ module.exports = {
 	transform: {
 		'^.+\\.(js|ts)$': ['babel-jest'],
 	}, // ts-jest causing coverage issue, use babel-jest instead
-	moduleDirectories: ['node_modules', 'src'],
 	collectCoverage: true,
 	collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}', '!**/*.d.ts'],
-	setupFiles: ['dotenv/config'],
-	maxWorkers: 1,
 	forceExit: true,
 }

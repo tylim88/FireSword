@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.prod.json",
+	"compilerOptions": {
+		"module": "ES2015",
+		"outDir": "dist/esm",
+		"moduleResolution": "node"
+	},
+	"include": ["src/firestore/index.ts", "src/database/index.ts"]
+}
