@@ -1,9 +1,9 @@
 import { ZodFirstPartyTypeKind } from 'zod'
-import { Handler, ObjectHandler } from './types'
+import { Handler } from './types'
 
 export const wrapWithZodTypeName = <
 	T extends `${ZodFirstPartyTypeKind}`,
-	Y extends Handler | ObjectHandler
+	Y extends Handler
 >(
 	zodTypename: T,
 	handler: Y

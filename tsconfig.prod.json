@@ -3,5 +3,9 @@
 	"compilerOptions": {
 		"noEmit": false
 	},
-	"include": ["src/firestore/index.ts", "src/database/index.ts"]
+	"include": [
+		"src/firestore-web/index.ts",
+		"src/firestore-admin/index.ts",
+		"src/database/index.ts"
+	]
 }

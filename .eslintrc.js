@@ -19,6 +19,7 @@ module.exports = {
 	],
 	plugins: ['@typescript-eslint', 'import'],
 	rules: {
+		'no-sparse-arrays': 'off',
 		'import/named': 'off',
 		'import/no-unresolved': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off', // explicit function return type

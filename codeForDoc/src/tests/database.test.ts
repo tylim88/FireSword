@@ -1,13 +1,16 @@
-import { filter, zTimestamp } from 'firesword/database'
 import { z } from 'zod'
+import { zIncrement, zServerTimestamp, filter } from 'firesword/database'
+import { ServerValue } from 'firebase-admin/database'
 
 const schema = z.object({
 	z: z.object({
 		a: z.union([z.string(), z.number()]),
-		b: zTimestamp,
+		b: z.number(),
 		c: z.object({
 			e: z.null(),
 			f: z.union([z.literal('abc'), z.literal('efg')]),
+			g: zServerTimestamp(),
+			h: zIncrement(),
 		}),
 	}),
 })
@@ -17,7 +20,12 @@ describe('test filter', () => {
 			z: {
 				a: 'abc',
 				b: 123,
-				c: { e: null, f: 'efg' },
+				c: {
+					e: null,
+					f: 'efg',
+					g: ServerValue.TIMESTAMP,
+					h: ServerValue.increment(1),
+				},
 			},
 		}
 
@@ -32,9 +40,9 @@ describe('test filter', () => {
 	it('test data same member but wrong value type', () => {
 		const data = {
 			z: {
-				a: 123,
+				a: null,
 				b: 'abc',
-				c: { e: true, f: 123 },
+				c: { e: true, f: 123, g: null, h: 'abc' },
 			},
 		}
 
@@ -45,9 +53,7 @@ describe('test filter', () => {
 
 		expect(newObj).toEqual({
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, f: 123 },
+				c: {},
 			},
 		})
 	})
@@ -55,8 +61,11 @@ describe('test filter', () => {
 	it('test data with missing member ', () => {
 		const data = {
 			z: {
-				a: 123,
-				c: { e: true },
+				a: 'abc',
+				c: {
+					f: 'efg',
+					h: ServerValue.increment(1),
+				},
 			},
 		}
 
@@ -65,18 +74,25 @@ describe('test filter', () => {
 			data,
 		})
 
-		expect(newObj).toEqual({
-			z: { a: 123, c: { e: true } },
-		})
+		expect(newObj).toEqual(data)
 	})
 	it('test data with extra member', () => {
 		const data = {
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, j: null, f: 123 },
+				a: 'abc',
+				b: 123,
+				c: {
+					e: null,
+					f: 'efg',
+					g: ServerValue.TIMESTAMP,
+					h: ServerValue.increment(1),
+					z: null,
+					i: true,
+					j: 123,
+					k: 1,
+				},
 				f: { g: { h: '123' } },
-				i: 999,
+				k: 999,
 			},
 			m: { n: true },
 		}
@@ -88,9 +104,14 @@ describe('test filter', () => {
 
 		expect(newObj).toEqual({
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, f: 123 },
+				a: 'abc',
+				b: 123,
+				c: {
+					e: null,
+					f: 'efg',
+					g: ServerValue.TIMESTAMP,
+					h: ServerValue.increment(1),
+				},
 			},
 		})
 	})

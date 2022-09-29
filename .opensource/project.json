@@ -1,0 +1,19 @@
+{
+	"name": "FireSword",
+
+	"platforms": ["Web", "Admin"],
+
+	"content": "README.md",
+
+	"pages": [],
+
+	"related": [
+		"tylim88/Firelord",
+		"tylim88/FirelordJS",
+		"tylim88/FireCall",
+		"tylim88/FireCaller",
+		"tylim88/FireSageJS"
+	],
+
+	"tabs": []
+}

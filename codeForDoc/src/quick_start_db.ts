@@ -1,6 +1,6 @@
-import { filter, zTimestamp } from 'firesword/database'
+import { filter, zServerTimestamp, zIncrement } from 'firesword/database'
 import { z } from 'zod'
-
+import { serverTimestamp, increment } from 'firebase/database'
 // {
 // 	a: string
 // 	b: 1 | 2 | 3
@@ -9,8 +9,8 @@ import { z } from 'zod'
 // }
 const schema = z.object({
 	a: z.string(),
-	b: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-	g: z.array(zTimestamp),
+	b: z.union([z.number(), zIncrement()]),
+	g: z.array(zServerTimestamp()),
 	h: z.array(
 		z.object({
 			i: z.boolean(),
@@ -22,16 +22,27 @@ const schema = z.object({
 export const filteredData = filter({
 	schema,
 	data: {
+		// missing 'a'
 		z: 'unknown member',
-		b: 1,
-		g: [5276471267, 924721744, 23712938],
-		h: [{ i: true }, { j: 'a', z: 'unknown member' }],
+		b: increment(1),
+		g: [serverTimestamp(), serverTimestamp(), serverTimestamp()],
+		h: [
+			{
+				i: true,
+				// missing j
+			},
+			{
+				// missing i
+				j: 'a',
+				z: 'unknown member',
+			},
+		],
 	},
 })
 
 // console.log(filteredData)
 // {
-// 	b: 1,
-// 	g: [5276471267, 924721744, 23712938],
+// 	b: increment(1),
+// 	g: [ServerTimestamp, ServerTimestamp, ServerTimestamp],
 // 	h: [{ i: true }, { j: 'a' }],
 // }

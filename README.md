@@ -70,33 +70,35 @@
 </div>
 <br/>
 <div align="center">
-		Filter Firestore and RTDB Unknown Keys, Support Nest Filtering.
+		Filter Firestore and RTDB Unknown Keys Or Keys With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.
 </div>
 
 ## Installation
 
 ```bash
-npm i firesword zod lodash
+npm i firesword zod
 ```
 
 ## Note
 
-1. FireSword filters out all unknown members, nested or not.
-2. FireSword is a filter, not a validator, it doesn't care about missing members.
-3. This library is built on top of Zod. Please read the Zod [documentation](https://github.com/colinhacks/zod) if you need validation.
-4. Both Firestore and RTDB filters support `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
-5. Only work for read data and work with both web and admin sdk, mostly implement in admin environment(for triggers).
-6. The filtered data is deep clone original data except for Firestore `Timestamp`, `DocumentReference` and `GeoPoint`.
+1. Filters out all unknown members, nested or not.
+2. Does not throw on missing members(if you need validation, see 3).
+3. To validate, just call `schema.parse(data)`. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
+4. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
 
 ## Limitation
 
 1. do not union object type with any other type: `z.union([z.object({}), z.someOtherType])`
 2. do not union array type with any other type: `z.union([z.array(z.any()), z.someOtherType])`
+3. data must be object type.
 
 ## Firestore Quick Start
 
-1. `zTimestamp`, `zDocumentReference` and `zGeoPoint` are custom Firestore Zod types.
-2. `Date`, `serverTimestamp` and `Timestamp` all share the same Zod type: `zTimestamp`.
+1. `zTimestamp`, `zDocumentReference` and `zGeoPoint`, `zArrayUnionAndRemove`, `zDelete`, `zIncrement` and `zServerTimestamp` are custom Firestore Zod types.
+2. Support native Zod Type: `z.date`.
+3. The filtered data is deep clone original data except for Firestore `Timestamp`, `DocumentReference`, `GeoPoint` and all field values.
+
+### Web
 
 ```ts
 import {
@@ -104,9 +106,22 @@ import {
 	zTimestamp,
 	zDocumentReference,
 	zGeoPoint,
-} from 'firesword/firestore'
+	zArrayUnionAndRemove,
+	zDelete,
+	zIncrement,
+} from 'firesword/firestore-web'
 import { z } from 'zod'
-import { Timestamp, getFirestore } from 'firebase-admin/firestore' // this is admin sdk but you can also use web sdk
+import {
+	Timestamp,
+	getFirestore,
+	doc,
+	arrayRemove,
+	deleteField,
+	increment,
+} from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+
+initializeApp({ projectId: 'any' })
 
 // {
 // 	a: string
@@ -122,54 +137,176 @@ import { Timestamp, getFirestore } from 'firebase-admin/firestore' // this is ad
 const schema = z.object({
 	a: z.string(),
 	b: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-	c: z.object({ d: zTimestamp, e: zDocumentReference, f: zGeoPoint }),
-	g: z.array(z.number()),
-	h: z.array(
+	c: z.object({ d: zTimestamp(), e: zDocumentReference(), f: zGeoPoint() }),
+	d: z.array(z.number()),
+	e: z.array(
 		z.object({
 			i: z.boolean(),
 			j: z.union([z.literal('a'), z.literal('b'), z.literal('c')]),
 		})
 	),
+	f: z.array(z.union([z.boolean(), z.number()])),
+	g: zArrayUnionAndRemove(z.string()),
+	h: z.union([zDelete(), z.number()]),
+	i: z.union([zIncrement(), z.number()]),
+	j: z.date(),
 })
 
-const filteredData = filter({
+export const filteredData = filter({
 	schema,
 	data: {
+		// 'a' is missing
+		z: 'unknown member',
+		b: 1,
+		c: {
+			d: new Timestamp(0, 0),
+			e: doc(getFirestore(), 'a/b'),
+			// f is missing
+			z: 'unknown member',
+		},
+		d: [100, 200, 300],
+		e: [
+			{
+				i: true,
+				// j is missing
+			},
+			{
+				// i is missing
+				j: 'a',
+				z: 'unknown member',
+			},
+		],
+		f: arrayRemove('abc'),
+		g: deleteField(),
+		h: increment(1),
+		i: new Date(0),
+	},
+})
+
+// console.log(filteredData)
+// {
+// 	b: 1,
+// 	c: {
+// 		d: new Timestamp(0, 0),
+// 		e: doc(getFirestore(), 'a/b'),
+// 	},
+// 	d: [100, 200, 300],
+// 	e: [{ i: true }, { j: 'a' }],
+//  f: arrayRemove('abc'),
+//  g: deleteField(),
+//  h: increment(1),
+//  i: new Date(0),
+// }
+```
+
+### Admin
+
+Similar to web.
+
+```ts
+import {
+	filter,
+	zTimestamp,
+	zDocumentReference,
+	zGeoPoint,
+	zArrayUnionAndRemove,
+	zDelete,
+	zIncrement,
+} from 'firesword/firestore-admin'
+import { z } from 'zod'
+import { Timestamp, getFirestore, FieldValue } from 'firebase-admin/firestore'
+import { initializeApp } from 'firebase-admin/app'
+
+initializeApp({ projectId: 'any' })
+
+// {
+// 	a: string
+// 	b: 1 | 2 | 3
+// 	c: {
+// 		d: Timestamp
+// 		e: DocumentReference
+// 		f: GeoPoint
+// 	}
+// 	g: number[]
+// 	h: { i: boolean; j: 'a' | 'b' | 'c' }[]
+// }
+const schema = z.object({
+	a: z.string(),
+	b: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+	c: z.object({ d: zTimestamp(), e: zDocumentReference(), f: zGeoPoint() }),
+	d: z.array(z.number()),
+	e: z.array(
+		z.object({
+			i: z.boolean(),
+			j: z.union([z.literal('a'), z.literal('b'), z.literal('c')]),
+		})
+	),
+	f: z.array(z.union([z.boolean(), z.number()])),
+	g: zArrayUnionAndRemove(z.string()),
+	h: z.union([zDelete(), z.number()]),
+	i: z.union([zIncrement(), z.number()]),
+	j: z.date(),
+})
+
+export const filteredData = filter({
+	schema,
+	data: {
+		// 'a' is missing
 		z: 'unknown member',
 		b: 1,
 		c: {
 			d: new Timestamp(0, 0),
 			e: getFirestore().doc('a/b'),
+			// f is missing
 			z: 'unknown member',
 		},
-		g: [5276471267, 924721744, 23712938],
-		h: [{ i: true }, { j: 'a', z: 'unknown member' }],
+		d: [100, 200, 300],
+		e: [
+			{
+				i: true,
+				// j is missing
+			},
+			{
+				// i is missing
+				j: 'a',
+				z: 'unknown member',
+			},
+		],
+		f: FieldValue.arrayRemove('abc'),
+		g: FieldValue.delete(),
+		h: FieldValue.increment(1),
+		i: new Date(0),
 	},
 })
 
-console.log(filteredData)
+// console.log(filteredData)
 // {
 // 	b: 1,
 // 	c: {
 // 		d: new Timestamp(0, 0),
-// 		e: getFirestore().doc('a/b'),
+// 		e: doc(getFirestore(), 'a/b'),
 // 	},
-// 	g: [5276471267, 924721744, 23712938],
-// 	h: [{ i: true }, { j: 'a' }],
+// 	d: [100, 200, 300],
+// 	e: [{ i: true }, { j: 'a' }],
+//  f: arrayRemove('abc'),
+//  g: deleteField(),
+//  h: increment(1),
+//  i: new Date(0),
 // }
 ```
 
 ## RTDB Quick Start
 
-1. `zTimestamp` custom RTDB Zod types.
-2. Use `zTimestamp` for `serverTimestamp`.
-3. RTDB's `zTimestamp` is not the same as Firestore's `zTimestamp`.
+1. `zServerTimestamp` and `zIncrement` are custom RTDB Zod types.
+2. Use `zServerTimestamp` for `serverTimestamp` and `zIncrement` for `increment`.
+3. RTDB's `zServerTimestamp` and `zIncrement` are not the same as Firestore's `zServerTimestamp` and `zIncrement`.
 4. Keep in mind that RTDB [doesn't always return array type](https://firebase.blog/posts/2014/04/best-practices-arrays-in-firebase).
+5. One api works for both admin and web.
 
 ```ts
-import { filter, zTimestamp } from 'firesword/database'
+import { filter, zServerTimestamp, zIncrement } from 'firesword/database'
 import { z } from 'zod'
-
+import { serverTimestamp, increment } from 'firebase/database'
 // {
 // 	a: string
 // 	b: 1 | 2 | 3
@@ -178,8 +315,8 @@ import { z } from 'zod'
 // }
 const schema = z.object({
 	a: z.string(),
-	b: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-	g: z.array(zTimestamp),
+	b: z.union([z.number(), zIncrement()]),
+	g: z.array(zServerTimestamp()),
 	h: z.array(
 		z.object({
 			i: z.boolean(),
@@ -188,20 +325,31 @@ const schema = z.object({
 	),
 })
 
-const filteredData = filter({
+export const filteredData = filter({
 	schema,
 	data: {
+		// missing 'a'
 		z: 'unknown member',
-		b: 1,
-		g: [100, 200, 300],
-		h: [{ i: true }, { j: 'a', z: 'unknown member' }],
+		b: increment(1),
+		g: [serverTimestamp(), serverTimestamp(), serverTimestamp()],
+		h: [
+			{
+				i: true,
+				// missing j
+			},
+			{
+				// missing i
+				j: 'a',
+				z: 'unknown member',
+			},
+		],
 	},
 })
 
-console.log(filteredData)
+// console.log(filteredData)
 // {
-// 	b: 1,
-// 	g: [5276471267, 924721744, 23712938],
+// 	b: increment(1),
+// 	g: [ServerTimestamp, ServerTimestamp, ServerTimestamp],
 // 	h: [{ i: true }, { j: 'a' }],
 // }
 ```
@@ -209,49 +357,53 @@ console.log(filteredData)
 ## Dealing With Incorrect Data Type
 
 ```ts
-import { filter } from 'firesword/firestore'
-import { z } from 'zod'
-
+import { filter, zArrayUnionAndRemove } from 'firesword/firestore-web'
+import { number, z } from 'zod'
+import { arrayUnion } from 'firebase/firestore'
 // {
 // 	a: string
 // 	b: 1 | 2 | 3
 // 	g: { x: number, y: null }
 // 	h: boolean[]
+//  i: zArrayUnionAndRemove(string)
 // }
 const schema = z.object({
 	a: z.string(),
 	b: z.union([z.literal(1), z.literal(2), z.literal(3)]),
 	g: z.object({ x: z.number(), y: z.null() }),
 	h: z.array(z.boolean()),
+	i: zArrayUnionAndRemove(z.string()),
+	j: z.array(
+		z.object({ x: z.number(), y: z.object({ a: z.null(), b: z.number() }) })
+	),
 })
 
-const filteredData = filter({
+export const filteredData = filter({
 	schema,
 	data: {
 		a: true, // expect string
 		b: {}, // expect 1 | 2 | 3
-		g: 1, // expect object
-		h: null, // expect array of boolean
+		g: 1, // expect { x:number, y:null }
+		h: null, // expect boolean[]
+		i: arrayUnion(1), // expect arrayUnion(string)
+		j: [{ x: 'abc', y: { a: null, b: 'abc' } }], // expect number for 'x' and 'b'
 	},
 })
+// console.log(filteredData) // { j:[{y: { a:null }}] }
 
-console.log(filteredData)
-// {
-// 	a: true, // data does not change
-// 	b: {}, // data does not change
-// 	g: {}, // replace with empty object
-// 	h: [], // replace with empty array
-// }
+export const filteredData2 = filter({
+	schema,
+	data: {
+		g: { a: {}, b: true, c: 'abc' }, // { x:number, y:null }
+		h: [1, true, 3], // expect boolean[], only the 2nd element is correct
+	},
+})
+// console.log(filteredData2) // { g: {}, h: [empty,true,empty] }
 ```
 
-1. If the expected data type is an object but received non-object, it will be replaced with an empty object.
-2. If the expected data type is an array but received non-object, it will be replaced with an empty array.
-3. For all the other cases, the original value is left untouched.
-4. This could be problematic, which is why you need to validate them using Zod as mentioned if you are not confident with your data integrity.
+## Special Types Type Casting
 
-## Filtered Data Static Typing
-
-You need to type case Firestore `zTimestamp`, `zDocumentReference` and `zGeoPoint`.
+You need to type cast Firestore `zTimestamp`, `zDocumentReference` and `zGeoPoint`.
 
 ```ts
 import {
@@ -259,7 +411,7 @@ import {
 	zTimestamp,
 	zDocumentReference,
 	zGeoPoint,
-} from 'firesword/firestore'
+} from 'firesword/firestore-web'
 import { z } from 'zod'
 import {
 	Timestamp,
@@ -267,16 +419,23 @@ import {
 	GeoPoint,
 	DocumentReference,
 	getFirestore,
-} from 'firebase/firestore' // this is web sdk but you can also use admin sdk
+} from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+
+initializeApp({ projectId: 'any' })
 
 // {
 // 	d: Timestamp
 // 	e: DocumentReference
 // 	f: GeoPoint
 // }
-const schema = z.object({ d: zTimestamp, e: zDocumentReference, f: zGeoPoint })
+const schema = z.object({
+	d: zTimestamp(),
+	e: zDocumentReference(),
+	f: zGeoPoint(),
+})
 
-const filteredData = filter({
+export const filteredData = filter({
 	schema,
 	data: {
 		d: new Timestamp(0, 0),
@@ -293,8 +452,6 @@ const filteredData = filter({
 ## In Case of Compiler Ignore Package.json Exports
 
 If you see error like `Cannot find module 'firesword/firestore'` or `Cannot find module 'firesword/database'`, it means your compiler ignore `package.json` `exports` field.
-
-The problem with `exports` is quite common, and I may remove the support for sub-module.
 
 Solution for Jest: [jest-node-exports-resolver](https://www.npmjs.com/package/jest-node-exports-resolver).
 

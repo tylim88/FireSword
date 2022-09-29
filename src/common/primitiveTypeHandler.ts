@@ -5,8 +5,11 @@ export const primitiveTypeHandler: Handler = ({
 	upperLevelData,
 	upperLevelClonedData,
 	key,
+	schema,
 }) => {
-	upperLevelClonedData[key] = upperLevelData[key]
+	if (schema.safeParse(upperLevelData[key]).success) {
+		upperLevelClonedData[key] = upperLevelData[key]
+	}
 }
 
 export const primitiveMatchCases = (

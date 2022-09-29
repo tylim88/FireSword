@@ -10,20 +10,23 @@ export type HandlerRef = {
 	key: string | number
 	schema: Schema
 	matchCases: MatchCases
+	exemptedObjectSchemas: ZodObject<ZodRawShape>[]
 }
 
 export type Handler = (ref: HandlerRef) => void
 
-export type ObjectHandler = (
-	ref: HandlerRef,
-	...exemptedObjectSchemas: ZodObject<ZodRawShape>[]
-) => void
-
-export type MatchCases = Partial<
-	Record<ZodFirstPartyTypeKind, Handler | ObjectHandler>
->
+export type MatchCases = Partial<Record<ZodFirstPartyTypeKind, Handler>>
 
 export type Filter = <T extends ZodObject<ZodRawShape>>(
+	ref: {
+		schema: T
+		data: Record<string, unknown>
+		exemptedObjectSchemas: ZodObject<ZodRawShape>[]
+	},
+	...matchCasesArr: MatchCases[]
+) => z.infer<T>
+
+export type WrappedFilter = <T extends ZodObject<ZodRawShape>>(
 	ref: {
 		schema: T
 		data: Record<string, unknown>

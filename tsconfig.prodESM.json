@@ -5,5 +5,9 @@
 		"outDir": "dist/esm",
 		"moduleResolution": "node"
 	},
-	"include": ["src/firestore/index.ts", "src/database/index.ts"]
+	"include": [
+		"src/firestore-web/index.ts",
+		"src/firestore-admin/index.ts",
+		"src/database/index.ts"
+	]
 }

@@ -6,17 +6,10 @@ import {
 	zArrayUnionAndRemove,
 	zDelete,
 	zIncrement,
-} from 'firesword/firestore-web'
+} from 'firesword/firestore-admin'
 import { z } from 'zod'
-import {
-	Timestamp,
-	getFirestore,
-	doc,
-	arrayRemove,
-	deleteField,
-	increment,
-} from 'firebase/firestore'
-import { initializeApp } from 'firebase/app'
+import { Timestamp, getFirestore, FieldValue } from 'firebase-admin/firestore'
+import { initializeApp } from 'firebase-admin/app'
 
 initializeApp({ projectId: 'any' })
 
@@ -57,7 +50,7 @@ export const filteredData = filter({
 		b: 1,
 		c: {
 			d: new Timestamp(0, 0),
-			e: doc(getFirestore(), 'a/b'),
+			e: getFirestore().doc('a/b'),
 			// f is missing
 			z: 'unknown member',
 		},
@@ -73,9 +66,9 @@ export const filteredData = filter({
 				z: 'unknown member',
 			},
 		],
-		f: arrayRemove('abc'),
-		g: deleteField(),
-		h: increment(1),
+		f: FieldValue.arrayRemove('abc'),
+		g: FieldValue.delete(),
+		h: FieldValue.increment(1),
 		i: new Date(0),
 	},
 })

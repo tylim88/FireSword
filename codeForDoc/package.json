@@ -6,7 +6,7 @@
 	"scripts": {
 		"uninstall": "rm -rf node_modules && rm -rf package-lock.json",
 		"reinstall": "npm run uninstall && npm i",
-		"test": "jest && jest -c=jest.config.ESM.js",
+		"test": "jest --detectOpenHandles && jest -c=jest.config.ESM.js --detectOpenHandles",
 		"tsc": "tsc"
 	},
 	"author": "",

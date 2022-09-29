@@ -1,6 +1,6 @@
 import { objectTypeHandler } from './objectTypeHandler'
 import { boolean, z } from 'zod'
-import { allMatchCases as matchCases } from './utilsForTest'
+import { genericMatchCases as matchCases } from './utils'
 import { isEqualWith } from 'lodash'
 
 const schema = z.object({
@@ -32,6 +32,7 @@ describe('test objectTypeHandler', () => {
 			upperLevelClonedData: newObj,
 			upperLevelData,
 			key: 'z',
+			exemptedObjectSchemas: [],
 		})
 
 		expect(newObj).toEqual(upperLevelData)
@@ -48,9 +49,10 @@ describe('test objectTypeHandler', () => {
 			upperLevelClonedData: newObj,
 			upperLevelData,
 			key: 'z',
+			exemptedObjectSchemas: [],
 		})
 
-		expect(newObj).toEqual({ z: { a: 123, b: 'abc', c: { e: true, f: {} } } })
+		expect(newObj).toEqual({ z: { c: {} } })
 	})
 
 	it('test data with missing member', () => {
@@ -58,8 +60,8 @@ describe('test objectTypeHandler', () => {
 
 		const upperLevelData = {
 			z: {
-				a: 123,
-				c: { e: true },
+				a: 'abc',
+				c: { e: null },
 			},
 		}
 
@@ -69,8 +71,9 @@ describe('test objectTypeHandler', () => {
 			upperLevelClonedData: newObj,
 			upperLevelData,
 			key: 'z',
+			exemptedObjectSchemas: [],
 		})
-		expect(newObj).toEqual({ z: { a: 123, c: { e: true } } })
+		expect(newObj).toEqual({ z: { a: 'abc', c: { e: null } } })
 	})
 
 	it('test data with  extra member', () => {
@@ -78,9 +81,9 @@ describe('test objectTypeHandler', () => {
 
 		const upperLevelData = {
 			z: {
-				a: 123,
-
-				c: { e: true, j: null, f: [] },
+				a: 'abc',
+				b: 123,
+				c: { e: null, j: null, f: { g: 1 } },
 				f: { g: { h: '123' } },
 				i: 999,
 			},
@@ -93,7 +96,10 @@ describe('test objectTypeHandler', () => {
 			upperLevelClonedData: newObj,
 			upperLevelData,
 			key: 'z',
+			exemptedObjectSchemas: [],
 		})
-		expect(newObj).toEqual({ z: { a: 123, c: { e: true, f: {} } } })
+		expect(newObj).toEqual({
+			z: { a: 'abc', b: 123, c: { e: null, f: { g: 1 } } },
+		})
 	})
 })

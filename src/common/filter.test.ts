@@ -1,6 +1,6 @@
 import { filter } from './filter'
 import { boolean, z } from 'zod'
-import { allMatchCases } from './utilsForTest'
+import { genericMatchCases as matchCases } from './utils'
 
 const schema = z.object({
 	z: z.object({
@@ -16,6 +16,14 @@ const schema = z.object({
 	x: z.object({ y: z.literal('123') }),
 })
 describe('test filter', () => {
+	it('top level is not object', () => {
+		expect(
+			filter(
+				// @ts-expect-error
+				'a'
+			)
+		).toEqual({})
+	})
 	it('test data same as schema', () => {
 		const data = {
 			z: {
@@ -24,27 +32,27 @@ describe('test filter', () => {
 				c: { e: null, f: 'efg', g: [{ h: 123, i: 'abc' }] },
 				d: [1, 2, 3],
 			},
-			x: { y: 123 },
+			x: { y: '123' },
 		}
 
 		const newObj = filter(
 			{
 				schema,
 				data,
+				exemptedObjectSchemas: [],
 			},
-			allMatchCases
+			matchCases
 		)
-
 		expect(newObj).toEqual(data)
 	})
 
 	it('test data same member but wrong value type', () => {
 		const data = {
 			z: {
-				a: 123,
+				a: {},
 				b: 'abc',
 				c: { e: true, f: 123, g: null },
-				d: ['a', 'b', 'c'],
+				d: ['a', 2, 'c', 4],
 			},
 			x: 123,
 		}
@@ -53,53 +61,57 @@ describe('test filter', () => {
 			{
 				schema,
 				data,
+				exemptedObjectSchemas: [],
 			},
-			allMatchCases
+			matchCases
 		)
 
 		expect(newObj).toEqual({
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, f: 123, g: [] },
-				d: ['a', 'b', 'c'],
+				c: {},
+				d: [, 2, , 4],
 			},
-			x: {},
 		})
 	})
 
 	it('test data with missing member ', () => {
 		const data = {
 			z: {
-				a: 123,
-				c: { e: true, g: [{ i: 123 }] },
-				d: ['a', 'b', 'c'],
+				a: 'abc',
+				c: { e: null, g: [{ h: 123 }] },
+				d: [1, 2, 3],
 			},
+			x: {},
 		}
 
 		const newObj = filter(
 			{
 				schema,
 				data,
+				exemptedObjectSchemas: [],
 			},
-			allMatchCases
+			matchCases
 		)
 
 		expect(newObj).toEqual({
-			z: { a: 123, c: { e: true, g: [{ i: 123 }] }, d: ['a', 'b', 'c'] },
+			z: {
+				a: 'abc',
+				c: { e: null, g: [{ h: 123 }] },
+				d: [1, 2, 3],
+			},
+			x: {},
 		})
 	})
 	it('test data with extra member', () => {
 		const data = {
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, j: null, f: 123, g: [{ h: 'abc', i: 123, k: true }] },
-				d: ['a', 'b', 'c'],
+				a: 'abc',
+				b: 123,
+				c: { e: null, j: null, f: 'efg', g: [{ h: 123, i: 'abc', k: true }] },
+				d: [1, 2, 3],
 				f: { g: { h: '123' } },
-				i: 999,
 			},
-			x: 123,
+			x: { y: '123' },
 			m: { n: boolean },
 		}
 
@@ -107,18 +119,19 @@ describe('test filter', () => {
 			{
 				schema,
 				data,
+				exemptedObjectSchemas: [],
 			},
-			allMatchCases
+			matchCases
 		)
 
 		expect(newObj).toEqual({
 			z: {
-				a: 123,
-				b: 'abc',
-				c: { e: true, f: 123, g: [{ h: 'abc', i: 123 }] },
-				d: ['a', 'b', 'c'],
+				a: 'abc',
+				b: 123,
+				c: { e: null, f: 'efg', g: [{ h: 123, i: 'abc' }] },
+				d: [1, 2, 3],
 			},
-			x: {},
+			x: { y: '123' },
 		})
 	})
 })

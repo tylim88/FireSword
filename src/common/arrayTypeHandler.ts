@@ -9,12 +9,13 @@ export const arrayTypeHandler: Handler = ({
 	key,
 	schema,
 	matchCases,
+	exemptedObjectSchemas,
 }) => {
 	const schema_ = schema as ZodArray<Schema>
 	const newSchema = schema_._def.type
-	const newUpperLevelClonedData = (upperLevelClonedData[key] = [])
 	const newUpperLevelData = upperLevelData[key]
 	if (Array.isArray(newUpperLevelData)) {
+		const newUpperLevelClonedData = (upperLevelClonedData[key] = [])
 		newUpperLevelData.forEach((item, index) => {
 			matchCases[newSchema._def.typeName]!({
 				upperLevelData: newUpperLevelData,
@@ -22,6 +23,7 @@ export const arrayTypeHandler: Handler = ({
 				key: index,
 				schema: newSchema,
 				matchCases,
+				exemptedObjectSchemas,
 			})
 		})
 	}

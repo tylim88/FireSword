@@ -3,7 +3,7 @@ import {
 	zTimestamp,
 	zDocumentReference,
 	zGeoPoint,
-} from 'firesword/firestore'
+} from 'firesword/firestore-web'
 import { z } from 'zod'
 import {
 	Timestamp,
@@ -11,7 +11,7 @@ import {
 	GeoPoint,
 	DocumentReference,
 	getFirestore,
-} from 'firebase/firestore' // also work with admin sdk.
+} from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
 
 initializeApp({ projectId: 'any' })
@@ -21,7 +21,11 @@ initializeApp({ projectId: 'any' })
 // 	e: DocumentReference
 // 	f: GeoPoint
 // }
-const schema = z.object({ d: zTimestamp, e: zDocumentReference, f: zGeoPoint })
+const schema = z.object({
+	d: zTimestamp(),
+	e: zDocumentReference(),
+	f: zGeoPoint(),
+})
 
 export const filteredData = filter({
 	schema,
