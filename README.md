@@ -82,8 +82,8 @@ npm i firesword zod
 ## Note
 
 1. Filters out all unknown members, nested or not.
-2. Does not throw on missing members(if you need validation, see 3).
-3. To validate, just call `schema.parse(data)`. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
+2. Does not throw on missing members. In case you need to throw, see point 3.
+3. To validate, call `schema.parse(data)`. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
 4. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
 
 ## Limitation
