@@ -132,8 +132,13 @@ initializeApp({ projectId: 'any' })
 // 		e: DocumentReference
 // 		f: GeoPoint
 // 	}
-// 	g: number[]
-// 	h: { i: boolean; j: 'a' | 'b' | 'c' }[]
+// 	d: number[]
+// 	e: { i: boolean; j: 'a' | 'b' | 'c' }[]
+//  f: (number|boolean)[]
+//  g: string[]
+//  h: number
+//  i: number
+//  j: Date
 // }
 const schema = z.object({
 	a: z.string(),
@@ -147,7 +152,7 @@ const schema = z.object({
 		})
 	),
 	f: z.array(z.union([z.boolean(), z.number()])),
-	g: zArrayUnionAndRemove(z.string()),
+	g: z.union([z.array(z.string()), zArrayUnionAndRemove(z.string())]),
 	h: z.union([zDelete(), z.number()]),
 	i: z.union([zIncrement(), z.number()]),
 	j: z.date(),
@@ -202,7 +207,7 @@ export const filteredData = filter({
 
 ### Admin
 
-This is how you import it, the rest are similar to web.
+This is how you import the same thing in admin, the rest are similar to web.
 
 ```ts
 import {
