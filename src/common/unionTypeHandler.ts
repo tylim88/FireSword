@@ -11,6 +11,7 @@ export const unionTypeHandler: Handler = ({
 	schema,
 	matchCases,
 	exemptedObjectSchemas,
+	typeOfUpperLevelData,
 }) => {
 	const schema_ = schema as ZodUnion<readonly [Schema, ...Schema[]]>
 	const options = schema_._def.options
@@ -22,6 +23,7 @@ export const unionTypeHandler: Handler = ({
 			schema: option,
 			matchCases,
 			exemptedObjectSchemas,
+			typeOfUpperLevelData,
 		})
 	})
 }

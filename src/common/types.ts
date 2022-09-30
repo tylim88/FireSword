@@ -11,6 +11,7 @@ export type HandlerRef = {
 	schema: Schema
 	matchCases: MatchCases
 	exemptedObjectSchemas: ZodObject<ZodRawShape>[]
+	typeOfUpperLevelData?: 'array' | undefined
 }
 
 export type Handler = (ref: HandlerRef) => void

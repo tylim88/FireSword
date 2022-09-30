@@ -6,9 +6,12 @@ export const primitiveTypeHandler: Handler = ({
 	upperLevelClonedData,
 	key,
 	schema,
+	typeOfUpperLevelData,
 }) => {
 	if (schema.safeParse(upperLevelData[key]).success) {
 		upperLevelClonedData[key] = upperLevelData[key]
+	} else if (typeOfUpperLevelData === 'array') {
+		upperLevelClonedData[key] = null
 	}
 }
 

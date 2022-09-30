@@ -1,5 +1,5 @@
 import { filter } from './filter'
-import { boolean, z } from 'zod'
+import { z } from 'zod'
 import { genericMatchCases as matchCases } from './utils'
 
 const schema = z.object({
@@ -69,7 +69,7 @@ describe('test filter', () => {
 		expect(newObj).toEqual({
 			z: {
 				c: {},
-				d: [, 2, , 4],
+				d: [null, 2, null, 4],
 			},
 		})
 	})
@@ -112,7 +112,7 @@ describe('test filter', () => {
 				f: { g: { h: '123' } },
 			},
 			x: { y: '123' },
-			m: { n: boolean },
+			m: { n: true },
 		}
 
 		const newObj = filter(

@@ -24,6 +24,7 @@ export const arrayTypeHandler: Handler = ({
 				schema: newSchema,
 				matchCases,
 				exemptedObjectSchemas,
+				typeOfUpperLevelData: 'array',
 			})
 		})
 	}

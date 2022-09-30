@@ -82,7 +82,7 @@ describe('test filter', () => {
 		})
 		expect(newObj).toEqual({
 			c: {},
-			d: [, 123],
+			d: [null, 123, null],
 		})
 	})
 	it('test data with missing member ', () => {

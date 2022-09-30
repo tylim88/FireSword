@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { serverTimestamp, increment } from 'firebase/database'
 // {
 // 	a: string
-// 	b: 1 | 2 | 3
+// 	b: number
 // 	g: serverTimestamp[]
 // 	h: { i: boolean; j: 'a' | 'b' | 'c' }[]
 // }

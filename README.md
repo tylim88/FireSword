@@ -81,16 +81,17 @@ npm i firesword zod
 
 ## Note
 
-1. Filters out all unknown members, nested or not.
-2. Does not throw on missing members. In case you need to throw, see point 3.
-3. To validate, call `schema.parse(data)`. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
-4. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
+1. Remove all incorrect enumerable keys, which mean it works for array too.
+2. Filters recursively, nothing can escape, it is a black hole.
+3. Does not throw on missing members, the job is to filter. In case you need to throw(validate), see the next point.
+4. To validate, call `schema.parse(data)` or `schema.safeParse(data)` depend on your use case. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
+5. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
 
 ## Limitation
 
 1. do not union object type with any other type: `z.union([z.object({}), z.someOtherType])`
-2. do not union array type with any other type: `z.union([z.array(z.any()), z.someOtherType])`
-3. data must be object type.
+2. do not union array type with any other type: `z.union([z.array(...), z.someOtherType])`
+3. Top level data type must be an object type.
 
 ## Firestore Quick Start
 
@@ -229,7 +230,7 @@ import { z } from 'zod'
 import { serverTimestamp, increment } from 'firebase/database'
 // {
 // 	a: string
-// 	b: 1 | 2 | 3
+// 	b: number
 // 	g: serverTimestamp[]
 // 	h: { i: boolean; j: 'a' | 'b' | 'c' }[]
 // }
@@ -318,7 +319,7 @@ export const filteredData2 = filter({
 		h: [1, true, 3], // expect boolean[], only the 2nd element is correct
 	},
 })
-// console.log(filteredData2) // { g: {}, h: [empty,true,empty] }
+// console.log(filteredData2) // { g: {}, h: [null, true, null] }
 ```
 
 ## Special Types Type Casting

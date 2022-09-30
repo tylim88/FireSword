@@ -39,4 +39,4 @@ export const filteredData2 = filter({
 		h: [1, true, 3], // expect boolean[], only the 2nd element is correct
 	},
 })
-// console.log(filteredData2) // { g: {}, h: [empty,true,empty] }
+// console.log(filteredData2) // { g: {}, h: [null,true,null] }
