@@ -1,6 +1,6 @@
 {
 	"name": "firesword",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "🔥Filter Firestore and RTDB Unknown Keys Or Keys Incorrect With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -44,13 +44,11 @@
 	"homepage": "https://firelordjs.com/firesage/quick_start",
 	"keywords": [
 		"firebase",
+		"firestore",
 		"database",
-		"wrapper",
-		"typescript",
-		"web",
-		"scalable",
-		"type-safe",
-		"V9"
+		"filter",
+		"validate",
+		"zod"
 	],
 	"devDependencies": {
 		"@babel/node": "^7.18.10",
