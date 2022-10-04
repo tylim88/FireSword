@@ -375,7 +375,7 @@ export const filteredData = filter({
 }
 ```
 
-## In Case of Compiler Ignore Package.json Exports
+## In Case of Compiler Ignoring Package.json Exports
 
 If you see error like `Cannot find module 'firesword/firestore'` or `Cannot find module 'firesword/database'`, it means your compiler ignore `package.json` `exports` field.
 
