@@ -3,7 +3,7 @@
 <!-- markdownlint-disable MD041 -->
 
 <div align="center">
-		<img src="https://raw.githubusercontent.com/tylim88/Firelord/main/img/ozai.png" width="200px"/>
+		<img src="./logo.svg" width="200px"/>
 		<h1>FireSword 烈火剑</h1>
 </div>
 
