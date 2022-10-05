@@ -3,7 +3,7 @@
 <!-- markdownlint-disable MD041 -->
 
 <div align="center">
-		<img src="./logo.svg" width="200px"/>
+		<img src="https://raw.githubusercontent.com/tylim88/FireSword/6eb62cd853d18e46fb667d991446f38b07a76960/logo.svg" width="200px"/>
 		<h1>FireSword 烈火剑</h1>
 </div>
 
