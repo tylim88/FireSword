@@ -73,6 +73,14 @@
 		Filter Firestore and RTDB Unknown Keys Or Keys With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.
 </div>
 
+Some time our API data requirement is less strict, we **do not** want to reject the whole data just because:
+
+1. some members(properties) are missing
+2. some pieces is incorrect
+3. there are extra members, and we don't want to save them into database
+
+This is where filtering come in handy.
+
 ## Installation
 
 ```bash
@@ -81,16 +89,16 @@ npm i firesword zod
 
 ## Note
 
-1. Remove all incorrect enumerable keys, which mean it works for array too.
+1. Remove all incorrect enumerable keys(members where key or value type is incorrect), which mean it works for array too.
 2. Filters recursively, nothing can escape, it is a black hole.
-3. Does not throw on missing members, the job is to filter. In case you need to throw(validate), see the next point.
-4. To validate, call `schema.parse(data)` or `schema.safeParse(data)` depend on your use case. Please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
+3. Does not throw on missing members, the job is to filter, not validating. In case you need to throw(validate), see point 4.
+4. To validate, simply call `yourSchema.parse(data)` or `yourSchema.safeParse(data)` depend on your use case. Keep in mind all members is required by default, you can set all members or certain members to partial, please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
 5. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
 
-## Limitation
+## Limitations For Both RTDB and Firestore Filters
 
-1. do not union object type with any other type: `z.union([z.object({}), z.someOtherType])`
-2. do not union array type with any other type: `z.union([z.array(...), z.someOtherType])`
+1. Do not union object type with any other type: `z.union([z.object({}), z.someOtherType])`
+2. Do not union array type with any other type: `z.union([z.array(...), z.someOtherType])`
 3. Top level data type must be an object type.
 
 ## Firestore Quick Start
@@ -320,7 +328,7 @@ export const filteredData = filter({
 export const filteredData2 = filter({
 	schema,
 	data: {
-		g: { a: {}, b: true, c: 'abc' }, // { x:number, y:null }
+		g: { a: {}, b: true, c: 'abc' }, // expect { x:number, y:null }
 		h: [1, true, 3], // expect boolean[], only the 2nd element is correct
 	},
 })
