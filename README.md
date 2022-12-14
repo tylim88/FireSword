@@ -72,6 +72,10 @@
 <div align="center">
 		Filter Firestore and RTDB Unknown Keys Or Keys With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.
 </div>
+<br/>
+<br/>
+
+## Purpose
 
 Some time our API data requirement is less strict, we **do not** want to reject the whole data just because:
 
@@ -289,6 +293,8 @@ export const filteredData = filter({
 ```
 
 ## Dealing With Incorrect Data Type
+
+This section use Firestore filter as example but the same logic is applied to RTDB filter.
 
 ```ts
 import { filter, zArrayUnionAndRemove } from 'firesword/firestore-web'
