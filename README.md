@@ -70,7 +70,7 @@
 </div>
 <br/>
 <div align="center">
-		Filter Firestore and RTDB Unknown Keys Or Keys With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.
+		Filter Unknown Keys Or Keys With Incorrect Data Types Recursively Before Saving into Firestore and RTDB, Support All Field Values And Special Data Types.
 </div>
 <br/>
 <br/>
