@@ -1,3 +1,4 @@
+// has risk of collision, but chance is small
 import { z, ZodTypeAny } from 'zod'
 import { constructor } from '../../common'
 

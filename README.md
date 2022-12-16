@@ -97,7 +97,9 @@ npm i firesword zod
 2. Filters recursively, nothing can escape, it is a black hole.
 3. Does not throw on missing members, the job is to filter, not validating. In case you need to throw(validate), see point 4.
 4. To validate, simply call `yourSchema.parse(data)` or `yourSchema.safeParse(data)` depend on your use case. Keep in mind all members is required by default, you can set all members or certain members to partial, please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
-5. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
+5. Filters do not care zod `partial` option and if you want to validate(you should), it is important to **validate first before you filter**, not the other way around.
+6. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
+7. This library is structure in a way that it is possible to support other database(open an issue for other databases support).
 
 ## Limitations For Both RTDB and Firestore Filters
 
@@ -109,7 +111,7 @@ npm i firesword zod
 
 1. `zTimestamp`, `zDocumentReference` and `zGeoPoint`, `zArrayUnionAndRemove`, `zDelete`, `zIncrement` and `zServerTimestamp` are custom Firestore Zod types.
 2. Support native Zod Type: `z.date`.
-3. The filtered data is deep clone original data except for Firestore `Timestamp`, `DocumentReference`, `GeoPoint` and all field values.
+3. The filtered data is deep clone of original data, will not clone Firestore `Timestamp`, `DocumentReference`, `GeoPoint` and all field values(`ServerTimestamp, ArrayRemove, ArrayUnion, Increment, Delete`).
 
 ### Web
 
@@ -238,8 +240,8 @@ import {
 1. `zServerTimestamp` and `zIncrement` are custom RTDB Zod types.
 2. Use `zServerTimestamp` for `serverTimestamp` and `zIncrement` for `increment`.
 3. RTDB's `zServerTimestamp` and `zIncrement` are not the same as Firestore's `zServerTimestamp` and `zIncrement`.
-4. Keep in mind that RTDB [doesn't always return array type](https://firebase.blog/posts/2014/04/best-practices-arrays-in-firebase).
-5. One api works for both admin and web.
+4. RTDB [doesn't always return array type](https://firebase.blog/posts/2014/04/best-practices-arrays-in-firebase). <-- this does not affect how you should use this library but something you should be aware of.
+5. One api for both admin and web.
 
 ```ts
 import { filter, zServerTimestamp, zIncrement } from 'firesword/database'
