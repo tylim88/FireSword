@@ -79,9 +79,10 @@
 
 Some time our API data requirement is less strict, we **do not** want to reject the whole data just because:
 
-1. some members(properties) are missing
-2. some pieces is incorrect
-3. there are extra members, and we don't want to save them into database
+1. some information is incorrect
+2. extra information
+
+At the same time we don't want to save them into database, we just want to save whatever that is correct.
 
 This is where filtering come in handy.
 
