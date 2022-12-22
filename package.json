@@ -1,6 +1,6 @@
 {
 	"name": "firesword",
-	"version": "2.1.9",
+	"version": "2.1.10",
 	"description": "🔥Filter Firestore and RTDB Unknown Keys Or Keys Incorrect With Incorrect Data Types Recursively, Support All Field Values And Special Data Types.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -81,7 +81,7 @@
 		"rollup-plugin-terser": "^7.0.2",
 		"shelljs": "^0.8.5",
 		"tsdoc": "^0.0.4",
-		"typescript": "^4.8.2",
+		"typescript": "^4.9.4",
 		"uuid": "^8.3.2",
 		"zod": "^3.19.1"
 	},

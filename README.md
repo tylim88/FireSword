@@ -79,8 +79,8 @@
 
 Some time our API data requirement is less strict, we **do not** want to reject the whole data just because:
 
-1. some information is incorrect
-2. extra information
+1. some information is incorrect(correct key but incorrect value)
+2. extra information(unknown keys)
 
 At the same time we don't want to save them into database, we just want to save whatever that is correct.
 
@@ -92,15 +92,14 @@ This is where filtering come in handy.
 npm i firesword zod
 ```
 
-## Note
+## What It Does?
 
 1. Remove all incorrect enumerable keys(members where key or value type is incorrect), which mean it works for array too.
 2. Filters recursively, nothing can escape, it is a black hole.
 3. Does not throw on missing members, the job is to filter, not validating. In case you need to throw(validate), see point 4.
 4. To validate, simply call `yourSchema.parse(data)` or `yourSchema.safeParse(data)` depend on your use case. Keep in mind all members is required by default, you can set all members or certain members to partial, please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
-5. Filters do not care zod `partial` option and if you want to validate(you should), it is important to **validate first before you filter**, not the other way around.
-6. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
-7. This library is structure in a way that it is possible to support other database(open an issue for other databases support).
+5. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
+6. This library is structure in a way that it is possible to support other database(open an issue and I will expose the API, so you can create your own filter, or you can directly contribute to this repo).
 
 ## Limitations For Both RTDB and Firestore Filters
 
@@ -139,6 +138,7 @@ import { initializeApp } from 'firebase/app'
 
 initializeApp({ projectId: 'any' })
 
+// schema type
 // {
 // 	a: string
 // 	b: 1 | 2 | 3
@@ -204,7 +204,7 @@ export const filteredData = filter({
 	},
 })
 
-// console.log(filteredData)
+console.log(filteredData)
 // {
 // 	b: 1,
 // 	c: {
@@ -248,6 +248,8 @@ import {
 import { filter, zServerTimestamp, zIncrement } from 'firesword/database'
 import { z } from 'zod'
 import { serverTimestamp, increment } from 'firebase/database'
+
+// schema type
 // {
 // 	a: string
 // 	b: number
