@@ -89,7 +89,7 @@ This is where filtering come in handy.
 ## Installation
 
 ```bash
-npm i firesword zod
+npm i firesword [zod strip](https://github.com/colinhacks/zod#strip) to filter, it will destroys the special data types. Always only use FireSword to filter.
 ```
 
 ## What It Does?
@@ -100,6 +100,8 @@ npm i firesword zod
 4. To validate, simply call `yourSchema.parse(data)` or `yourSchema.safeParse(data)` depend on your use case. Keep in mind all members is required by default, you can set all members or certain members to partial, please read the Zod [documentation](https://github.com/colinhacks/zod) for more parsing options.
 5. Both Firestore and RTDB filters support native Zod types: `z.literal`, `z.string`, `z.number`, `z.null`, `z.boolean`, `z.array`, `z.union`, `z.object`.
 6. This library is structure in a way that it is possible to support other database(open an issue and I will expose the API, so you can create your own filter, or you can directly contribute to this repo).
+
+Important: do not use zod st
 
 ## Limitations For Both RTDB and Firestore Filters
 

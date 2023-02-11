@@ -13,8 +13,8 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
           registry-url: 'https://registry.npmjs.org'
       - run: npm i
-      - run: npm run lint --fix
-      - run: npm run pretty-quick
+      - run: npm run lint
+      - run: npm run pretty
       - run: npm test
         env:
           PROJECT_ID: ${{ secrets.PROJECT_ID }}

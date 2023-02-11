@@ -11,8 +11,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
       - run: npm i
-      - run: npm run lint --fix
-      - run: npm run pretty-quick
+      - run: npm run lint
+      - run: npm run pretty
       - run: npm test
         env:
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
