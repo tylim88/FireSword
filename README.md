@@ -75,6 +75,12 @@
 <br/>
 <br/>
 
+## Update
+
+Do not use this library.
+
+I will rewrite this library to provide only custom zod types, we don't really need other functionality because zod can do the same thing.
+
 ## Purpose
 
 Some time our API data requirement is less strict, we **do not** want to reject the whole data just because:
