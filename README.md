@@ -79,7 +79,7 @@
 
 Do not use this library.
 
-I will rewrite this library to provide only custom zod types, we don't really need other functionality because zod can do the same thing.
+I will repurpose this library to support Firelord code first approach.
 
 ## Purpose
 
