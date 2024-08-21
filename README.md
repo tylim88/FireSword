@@ -1,3 +1,9 @@
+## Update
+
+Do not use this library.
+
+I will repurpose this library to support Firelord code first approach.
+
 <!-- markdownlint-disable MD010 -->
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
@@ -74,12 +80,6 @@
 </div>
 <br/>
 <br/>
-
-## Update
-
-Do not use this library.
-
-I will repurpose this library to support Firelord code first approach.
 
 ## Purpose
 
